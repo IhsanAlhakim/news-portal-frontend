@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import NewsComment from "@/components/NewsComment";
 import { Button } from "@/components/ui/button";
 import { SendHorizonal } from "lucide-react";
 
@@ -55,26 +55,9 @@ export default function NewsDetail() {
             <span className="font-bold">Komentar </span> (200)
           </h3>
           <div className="bg-white p-3 rounded-lg flex flex-col gap-3 divide-y">
-            <div className="flex gap-3 p-5">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col gap-1">
-                <p className="font-bold">Nama</p>
-                <p>Komentar</p>
-              </div>
-            </div>
-            <div className="flex gap-3 p-5">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col gap-1">
-                <p className="font-bold">Nama</p>
-                <p>Komentar</p>
-              </div>
-            </div>
+            {[1, 2, 3].map((news) => (
+              <NewsComment key={news} />
+            ))}
           </div>
         </div>
       </div>
