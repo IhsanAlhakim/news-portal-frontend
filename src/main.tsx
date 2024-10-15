@@ -6,6 +6,9 @@ import RootLayout from "./layouts/RootLayout.tsx";
 import Home from "./pages/Home.tsx";
 import NewsDetail from "./pages/NewsDetail.tsx";
 import NewsEachCategory from "./pages/NewsEachCategory.tsx";
+import AdminLayout from "./layouts/AdminLayout.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
+import Login from "./pages/Login.tsx";
 
 const router = createBrowserRouter([
   {
@@ -28,7 +31,17 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <div>Hello Ini Dashboard</div>,
+    element: <AdminLayout />,
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
+    ],
+  },
+  {
+    path: "/dashboard/login",
+    element: <Login />,
   },
 ]);
 
