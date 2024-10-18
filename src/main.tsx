@@ -9,6 +9,9 @@ import NewsEachCategory from "./pages/NewsEachCategory.tsx";
 import AdminLayout from "./layouts/AdminLayout.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Login from "./pages/Login.tsx";
+import ManageNews from "./pages/ManageNews.tsx";
+import AddNews from "./pages/AddNews.tsx";
+import EditNews from "./pages/EditNews.tsx";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +39,18 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Dashboard />,
+      },
+      {
+        path: "/dashboard/news",
+        element: <ManageNews />,
+      },
+      {
+        path: "/dashboard/news/add",
+        element: <AddNews />,
+      },
+      {
+        path: "/dashboard/news/edit",
+        element: <EditNews />,
       },
     ],
   },

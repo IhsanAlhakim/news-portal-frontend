@@ -8,7 +8,7 @@ export default function Home() {
         <h2 className="text-center text-2xl font-bold">TODAYS NEWS</h2>
       </div>
       <NewsCarousel />
-      <hr className="border-gray-300 my-4 w-[900px] mx-auto" />
+      <hr className="border-gray-300 my-4 w-[90%] mx-auto" />
       <div className="mb-5">
         <h2 className="pl-4 text-2xl font-bold">OTHER NEWS</h2>
       </div>

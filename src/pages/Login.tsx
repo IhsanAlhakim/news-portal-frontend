@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { ArrowRight, KeyRound, Mail } from "lucide-react";
 
 export default function Login() {
   return (
-    <main className="w-screen h-screen flex justify-center items-center bg-blue-700">
+    <main className="w-screen h-screen flex justify-center items-center bg-blue-500">
       <section className="bg-white w-[800px] h-[500px] rounded-xl p-3 flex">
         <div className="w-1/2 bg-slate-50 rounded-lg flex p-5 bg-login-image bg-center bg-cover">
           <div>
@@ -22,7 +21,12 @@ export default function Login() {
         </div>
         <div className="w-1/2 pl-10 pr-10 pt-12">
           <div className="mb-8">
-            <h2 className="text-center text-xl font-bold">LOGIN</h2>
+            <h2 className="text-blue-500 text-center text-5xl font-bold mb-1">
+              Welcome
+            </h2>
+            <p className="text-blue-500 text-center text-sm font-normal">
+              Login with Email
+            </p>
           </div>
           <div>
             <form action="" className="flex flex-col gap-4">
@@ -58,7 +62,7 @@ export default function Login() {
                   />
                 </div>
               </div>
-              <Button className="text-md bg-blue-600">Login</Button>
+              <Button className="text-md bg-blue-500 mt-5">Login</Button>
             </form>
           </div>
         </div>

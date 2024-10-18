@@ -4,7 +4,7 @@ import { SendHorizonal } from "lucide-react";
 
 export default function NewsDetail() {
   return (
-    <div className="w-full">
+    <section className="w-full">
       <div className="w-[800px] mx-auto">
         <div className="flex flex-col items-center gap-2 mb-4">
           <h2 className="text-4xl font-bold text-center">
@@ -61,6 +61,6 @@ export default function NewsDetail() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
