@@ -1,8 +1,33 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Users } from "@/models/users";
+import { getLoggedInUser, logout } from "@/network/NewsApi";
 import { LayoutDashboard, LogOut, Newspaper } from "lucide-react";
-import { Link, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 
 export default function AdminLayout() {
+  const [Admin, setAdmin] = useState<Users | null>(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const loadLoggedInUser = async () => {
+      const loggedInUser = await getLoggedInUser();
+      if (loggedInUser === null) {
+        return navigate("/dashboard/login");
+      }
+      setAdmin(loggedInUser);
+    };
+    loadLoggedInUser();
+  }, []);
+
+  const handleLogout = async () => {
+    const isLoggedOut = await logout();
+    if (isLoggedOut) {
+      navigate("/dashboard/login");
+    }
+  };
+
   return (
     <>
       <div className="min-h-screen grid grid-rows-[70px_calc(100%-70px)]">
@@ -12,7 +37,9 @@ export default function AdminLayout() {
               <h1 className="text-xl font-bold">NEWSNOW ADMIN</h1>
             </div>
             <div className="ml-auto flex items-center gap-5">
-              <h2 className="font-semibold">Selamat Datang, Admin</h2>
+              <h2 className="font-semibold">
+                Selamat Datang, {Admin?.username}
+              </h2>
               <Avatar>
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
@@ -39,11 +66,12 @@ export default function AdminLayout() {
                     News
                   </Link>
                 </li>
-                <li className="p-4 hover:bg-purple-950 hover:text-white transition-all mt-auto">
-                  <Link to="" className="flex gap-4 items-center">
-                    <LogOut />
-                    <p>Logout</p>
-                  </Link>
+                <li
+                  onClick={handleLogout}
+                  className="cursor-pointer p-4 hover:bg-purple-950 hover:text-white transition-all mt-auto flex gap-4 items-center"
+                >
+                  <LogOut />
+                  <p>Logout</p>
                 </li>
               </ul>
             </nav>

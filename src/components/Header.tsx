@@ -1,7 +1,18 @@
 import { Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 
 export default function Header() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    window.location.href = `/news/search?filter=${searchQuery}`;
+  };
+
   return (
     <header className="grid grid-rows-[calc(100%-56px)_56px]">
       <div className="flex justify-center items-center">
@@ -14,63 +25,69 @@ export default function Header() {
         <div className="max-w-screen-lg h-full m-auto flex">
           <nav className="my-auto h-full">
             <ul className="flex gap-5 text-white font-bold h-full items-center">
-              <Link
-                to={"/"}
+              <a
+                href={"/"}
                 className="h-full flex items-center hover:bg-sky-800 transition-all"
               >
                 <li className="pl-5 pr-5">
                   <p>Home</p>
                 </li>
-              </Link>
-              <Link
-                to={"/news/politics"}
+              </a>
+              <a
+                href={"/news/politics"}
                 className="h-full flex items-center hover:bg-sky-800 transition-all"
               >
                 <li className="pl-5 pr-5">
                   <p>Politics</p>
                 </li>
-              </Link>
-              <Link
-                to={"/news/sports"}
+              </a>
+              <a
+                href={"/news/sports"}
                 className="h-full flex items-center hover:bg-sky-800 transition-all"
               >
                 <li className="pl-5 pr-5">
                   <p>Sports</p>
                 </li>
-              </Link>
-              <Link
-                to={"/news/health"}
+              </a>
+              <a
+                href={"/news/health"}
                 className="h-full flex items-center hover:bg-sky-800 transition-all"
               >
                 <li className="pl-5 pr-5">
                   <p>Health</p>
                 </li>
-              </Link>
-              <Link
-                to={"/news/business"}
+              </a>
+              <a
+                href={"/news/business"}
                 className="h-full flex items-center hover:bg-sky-800 transition-all"
               >
                 <li className="pl-5 pr-5">
                   <p>Business</p>
                 </li>
-              </Link>
-              <Link
-                to={"/news/travel"}
+              </a>
+              <a
+                href={"/news/travel"}
                 className="h-full flex items-center hover:bg-sky-800 transition-all"
               >
                 <li className="pl-5 pr-5">
                   <p>Travel</p>
                 </li>
-              </Link>
+              </a>
             </ul>
           </nav>
           <div className="ml-auto my-auto flex bg-white bg-opacity-40 rounded items-center pl-2 pr-2">
-            <input
-              type="text"
-              placeholder="Search News..."
-              className="text-sm text-white bg-transparent p-2 w-[250px] outline-none placeholder-white"
-            />
-            <Search className="text-white" />
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                placeholder="Search News..."
+                className="text-sm text-white bg-transparent p-2 w-[250px] outline-none placeholder-white"
+                onChange={handleChange}
+                value={searchQuery}
+              />
+              <button type="submit">
+                <Search className="text-white" />
+              </button>
+            </form>
           </div>
         </div>
       </div>

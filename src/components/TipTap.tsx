@@ -1,9 +1,10 @@
 // src/Tiptap.tsx
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import { useState } from "react";
+import { Content, EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import MenuBar from "./TiptapToolbar";
+import { newsBody } from "./AddEditNewsForm";
+import { useEffect } from "react";
 
 // define your extension array
 const extensions = [
@@ -15,12 +16,15 @@ const extensions = [
   }),
 ];
 
-const Tiptap = () => {
-  const [contentValue, setContentValue] = useState("");
+interface TiptapProps {
+  newsData: newsBody | null;
+  setNewsData: (newsData: newsBody) => void;
+}
 
+const Tiptap = ({ newsData, setNewsData }: TiptapProps) => {
   const editor = useEditor({
     extensions,
-    content: contentValue,
+    content: `${newsData?.content}`,
     immediatelyRender: true,
     shouldRerenderOnTransaction: false,
     editorProps: {
@@ -30,9 +34,13 @@ const Tiptap = () => {
       },
     },
     onUpdate({ editor }) {
-      setContentValue(editor.getHTML());
+      setNewsData({ ...newsData, content: editor.getHTML() });
     },
   });
+
+  useEffect(() => {
+    editor.commands.setContent(newsData?.content as Content);
+  }, [newsData]);
 
   return (
     <>
