@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 export default function EditNews() {
   const { newsId } = useParams();
 
-  const [data, setData] = useState<News | undefined>(undefined);
+  const [data, setData] = useState<News | null>(null);
 
   useEffect(() => {
     const loadNews = async () => {

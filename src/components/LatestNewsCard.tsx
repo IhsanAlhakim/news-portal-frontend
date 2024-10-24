@@ -1,6 +1,5 @@
 import { getImageUrl } from "@/lib/supabase";
 import { News } from "@/models/news";
-import { Link } from "react-router-dom";
 
 interface LatestNewsCardProps {
   newsData: News | null;
@@ -14,7 +13,7 @@ export default function LatestNewsCard({ newsData }: LatestNewsCardProps) {
           <img
             className="w-full h-full object-cover"
             src={getImageUrl(newsData?.image)}
-            alt=""
+            alt="News Image"
           />
         </div>
         <div className="pl-2">

@@ -1,5 +1,8 @@
+import ErrorMessage from "@/components/ErrorMessage";
 import NewsComment from "@/components/NewsComment";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import getDate from "@/lib/getDate";
 import { createMarkup } from "@/lib/sanitizeHtml";
 import { getImageUrl } from "@/lib/supabase";
 import { addCommentFormSchema } from "@/lib/validation";
@@ -11,43 +14,51 @@ import {
   getCommentCountByNewsId,
   getNewsById,
 } from "@/network/NewsApi";
+import { type Error } from "@/types/error";
 import { SendHorizonal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export default function NewsDetail() {
   const { newsId } = useParams();
-
+  const { toast } = useToast();
+  const [error, setError] = useState<Error | null>(null);
   const [newsData, setNewsData] = useState<News | null>(null);
   const [newsComment, setNewsComment] = useState<Comments[] | null>(null);
-  const [comment, setComment] = useState<string | undefined>(undefined);
-  const [newsCommentCount, setNewsCommentCount] = useState(0);
+  const [comment, setComment] = useState<string>("");
+  const [newsCommentCount, setNewsCommentCount] = useState<number>(0);
 
   const sendComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (newsId && comment) {
-      const validate = addCommentFormSchema.safeParse({
-        comment: comment,
+
+    const validate = addCommentFormSchema.safeParse({
+      comment: comment,
+    });
+
+    if (!validate.success) {
+      const errorDesc = validate.error.issues.map((issue) => issue.message);
+      return setError({
+        errorTitle: "Error Validation",
+        errorDesc,
       });
-
-      if (!validate.success) {
-        // const errorDesc = validate.error.issues.map((issue) => issue.message);
-
-        // return setError({
-        //   errorTitle: "Error Validation",
-        //   errorDesc,
-        // });
-
-        return alert("Validasi Gagal");
-      }
-
-      const sendComment = await createComment({ newsId, comment });
-      if (sendComment.isAddSuccess) {
-        setComment("");
-        return alert("Komen berhasil dikirim");
-      }
-      return alert("Komen gagal dikirim");
     }
+
+    const sendComment = await createComment({ newsId, comment });
+
+    if (sendComment.isSuccess) {
+      setComment("");
+      setError(null);
+      toast({
+        title: "Comment sent",
+        description: "Your comment has been sent ",
+      });
+      return;
+    }
+    toast({
+      title: "Comment not sent",
+      description: "Your comment failed to be sent",
+    });
+    return;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -76,7 +87,9 @@ export default function NewsDetail() {
         <p className="text-base font-semibold">
           {newsData?.createdBy} - {newsData?.category}
         </p>
-        <p className="text-sm font-normal">{newsData?.createdAt}</p>
+        {newsData?.createdAt && (
+          <p className="text-sm font-normal">{getDate(newsData?.createdAt)}</p>
+        )}
       </div>
       <div className="mb-10">
         <div className="w-full h-[300px] bg-slate-600">
@@ -99,7 +112,8 @@ export default function NewsDetail() {
       <hr className="border-gray-300 my-4" />
       <div className="bg-slate-100 p-3 rounded">
         <h3 className="mb-4 font-bold">Tulis Komentar</h3>
-        <div className="bg-white p-3 rounded-lg flex flex-col gap-3">
+        <ErrorMessage error={error} />
+        <div className="bg-white p-3 rounded-lg flex flex-col gap-3 mt-3">
           <form onSubmit={sendComment}>
             <textarea
               name="comment"
@@ -111,7 +125,7 @@ export default function NewsDetail() {
               className="bg-transparent w-full resize-none outline-none"
             />
             <div className="ml-auto">
-              <Button className="bg-blue-700">
+              <Button className="bg-blue-700 hover:bg-blue-950">
                 Kirim
                 <SendHorizonal className="ml-2" size={15} />
               </Button>

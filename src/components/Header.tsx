@@ -10,7 +10,7 @@ export default function Header() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    window.location.href = `/news/search?filter=${searchQuery}`;
+    window.location.href = `/news/search?query=${searchQuery}`;
   };
 
   return (
@@ -75,8 +75,8 @@ export default function Header() {
               </a>
             </ul>
           </nav>
-          <div className="ml-auto my-auto flex bg-white bg-opacity-40 rounded items-center pl-2 pr-2">
-            <form onSubmit={handleSubmit}>
+          <div className="ml-auto my-auto bg-white bg-opacity-40 rounded pl-2 pr-2">
+            <form onSubmit={handleSubmit} className="flex items-center">
               <input
                 type="text"
                 placeholder="Search News..."

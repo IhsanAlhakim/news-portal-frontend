@@ -7,10 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import getDate from "@/lib/getDate";
 import { News } from "@/models/news";
 
 interface NewsTableProps {
-  newsList: News[] | null;
+  newsList: News[];
 }
 
 export default function NewsTable({ newsList }: NewsTableProps) {
@@ -28,18 +29,16 @@ export default function NewsTable({ newsList }: NewsTableProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {newsList
-          ? newsList.map((news) => (
-              <TableRow key={news._id}>
-                <TableCell>{news.title}</TableCell>
-                <TableCell>{news.createdBy}</TableCell>
-                <TableCell>{news.editedBy}</TableCell>
-                <TableCell>{news.createdAt}</TableCell>
-                <TableCell>{news.updatedAt}</TableCell>
-                <TableCell>{news.status}</TableCell>
-              </TableRow>
-            ))
-          : "No News Data Yet"}
+        {newsList.map((news) => (
+          <TableRow key={news._id}>
+            <TableCell>{news.title}</TableCell>
+            <TableCell>{news.createdBy}</TableCell>
+            <TableCell>{news.editedBy}</TableCell>
+            <TableCell>{getDate(news.createdAt)}</TableCell>
+            <TableCell>{getDate(news.updatedAt)}</TableCell>
+            <TableCell>{news.status}</TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );

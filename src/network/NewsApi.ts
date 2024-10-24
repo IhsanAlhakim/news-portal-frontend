@@ -2,13 +2,23 @@ const VITE_NEWS_API_PATH = import.meta.env.VITE_NEWS_API_PATH;
 const VITE_COMMENT_API_PATH = import.meta.env.VITE_COMMENT_API_PATH;
 const VITE_USER_API_PATH = import.meta.env.VITE_USER_API_PATH;
 
-export async function getNews(limit: number | null = null) {
+export async function getNews(limit?: number) {
   let response;
   if (!limit) {
     response = await fetch(`${VITE_NEWS_API_PATH}`, { method: "GET" });
     return response.json();
   }
   response = await fetch(`${VITE_NEWS_API_PATH}?limit=${limit}`);
+  return response.json();
+}
+
+export async function getNewsForUser(limit?: number) {
+  let response;
+  if (!limit) {
+    response = await fetch(`${VITE_NEWS_API_PATH}/user`, { method: "GET" });
+    return response.json();
+  }
+  response = await fetch(`${VITE_NEWS_API_PATH}/user?limit=${limit}`);
   return response.json();
 }
 
@@ -33,7 +43,7 @@ export async function getNewsById(id: string | undefined) {
 }
 
 export async function getNewsBySearchQuery(query: string | null) {
-  const response = await fetch(`${VITE_NEWS_API_PATH}/search?filter=${query}`, {
+  const response = await fetch(`${VITE_NEWS_API_PATH}/search?query=${query}`, {
     method: "GET",
   });
 
@@ -47,7 +57,7 @@ export async function getNewsCount(
   if (status === "none") {
     response = await fetch(`${VITE_NEWS_API_PATH}/count`, { method: "GET" });
   } else {
-    response = await fetch(`/api/news/count?status=${status}`);
+    response = await fetch(`${VITE_NEWS_API_PATH}/count?status=${status}`);
   }
 
   return response.json();
@@ -72,10 +82,7 @@ export async function getCommentCountByNewsId(
   return response.json();
 }
 
-export async function login(
-  email: string | undefined,
-  password: string | undefined
-) {
+export async function login(email?: string, password?: string) {
   const response = await fetch(`${VITE_USER_API_PATH}/login`, {
     method: "POST",
     body: JSON.stringify({ email: email, password: password }),
@@ -98,13 +105,15 @@ export async function logout() {
   return response.ok;
 }
 
-export async function createNews(body: {
+interface NewsBody {
   title: string | undefined;
   content: string | undefined;
   image: string | undefined;
   category: string | undefined;
   status: string | undefined;
-}) {
+}
+
+export async function createNews(body: NewsBody) {
   const response = await fetch(`${VITE_NEWS_API_PATH}`, {
     method: "POST",
     body: JSON.stringify(body),
@@ -116,16 +125,7 @@ export async function createNews(body: {
   return { isAddSuccess: response.ok, data: response.json() };
 }
 
-export async function updateNews(
-  body: {
-    title: string | undefined;
-    content: string | undefined;
-    image: string | undefined;
-    category: string | undefined;
-    status: string | undefined;
-  },
-  newsId: string | undefined
-) {
+export async function updateNews(body: NewsBody, newsId: string | undefined) {
   const response = await fetch(`${VITE_NEWS_API_PATH}/${newsId}`, {
     method: "PATCH",
     body: JSON.stringify(body),
@@ -146,8 +146,8 @@ export async function deleteNews(newsId: string) {
 }
 
 interface CreateCommentBody {
-  newsId: string;
-  comment: string;
+  newsId?: string;
+  comment?: string;
 }
 export async function createComment(body: CreateCommentBody) {
   const response = await fetch(`${VITE_COMMENT_API_PATH}`, {
@@ -158,7 +158,7 @@ export async function createComment(body: CreateCommentBody) {
     },
   });
 
-  return { isAddSuccess: response.ok, data: response.json() };
+  return { isSuccess: response.ok };
 }
 
 export async function getComment(newsId: string | undefined) {

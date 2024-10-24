@@ -9,11 +9,11 @@ export default function NewsEachCategory() {
   const { category } = useParams();
 
   useEffect(() => {
-    async function loadHomeNews() {
-      const newsForCategory = await getNewsByCategory(category);
-      setNewsData(newsForCategory);
+    async function loadNews() {
+      const newsData = await getNewsByCategory(category);
+      setNewsData(newsData);
     }
-    loadHomeNews();
+    loadNews();
   }, []);
 
   return (

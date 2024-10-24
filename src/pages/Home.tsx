@@ -1,7 +1,7 @@
 import NewsCard from "@/components/NewsCard";
 import NewsCarousel from "@/components/NewsCarousel";
 import { News } from "@/models/news";
-import { getNews } from "@/network/NewsApi";
+import { getNewsForUser } from "@/network/NewsApi";
 import { useEffect, useState } from "react";
 
 interface HomeNews {
@@ -18,9 +18,10 @@ export default function Home() {
   useEffect(() => {
     async function loadHomeNews() {
       const [newsForHome, newsForCarousel] = await Promise.all([
-        getNews(),
-        getNews(3),
+        getNewsForUser(),
+        getNewsForUser(3),
       ]);
+      console.log(newsForCarousel);
       setNewsData({
         carouselNews: newsForCarousel,
         otherNews: newsForHome,

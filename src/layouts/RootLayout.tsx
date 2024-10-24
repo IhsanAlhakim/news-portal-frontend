@@ -1,6 +1,7 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import SideSection from "@/components/SideSection";
+import { Toaster } from "@/components/ui/toaster";
 import { News } from "@/models/news";
 import { getNewsByCategory } from "@/network/NewsApi";
 import { useEffect, useState } from "react";
@@ -58,6 +59,7 @@ function RootLayout() {
             <Outlet />
             <SideSection latestNewsData={latestNewsData} />
           </div>
+          <Toaster />
         </main>
         <Footer />
       </div>

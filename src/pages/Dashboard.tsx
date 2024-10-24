@@ -29,7 +29,7 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    async function loadNewsCount() {
+    async function loadDashboardData() {
       const [
         totalNewsData,
         totalPublishedNewsData,
@@ -52,7 +52,7 @@ export default function Dashboard() {
         newsData: newsData,
       });
     }
-    loadNewsCount();
+    loadDashboardData();
   }, []);
 
   return (
@@ -83,7 +83,11 @@ export default function Dashboard() {
         <h3 className="text-xl font-bold">Recent News</h3>
         <Separator className="my-3 border-1 bg-violet-950" />
         <div className="max-h-[200px] overflow-auto ">
-          <NewsTable newsList={dashboardData.newsData} />
+          {dashboardData.newsData.length > 0 ? (
+            <NewsTable newsList={dashboardData.newsData} />
+          ) : (
+            <div className="text-center mt-3 text-xl">No News Data Yet</div>
+          )}
         </div>
       </div>
     </div>

@@ -3,9 +3,12 @@ import { addNewsFormSchema } from "@/lib/validation";
 import { News } from "@/models/news";
 import { createNews, updateNews } from "@/network/NewsApi";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Tiptap from "./TipTap";
 import { Button } from "./ui/button";
+import ErrorMessage from "./ErrorMessage";
+import { type Error } from "@/types/error";
+import { useToast } from "@/hooks/use-toast";
 
 export interface newsBody {
   title?: string | undefined;
@@ -19,7 +22,7 @@ export interface newsBody {
 
 interface AddEditNewsFormProps {
   type?: "ADD" | "EDIT";
-  data?: News | undefined;
+  data?: News | null;
 }
 
 export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
@@ -32,11 +35,12 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
     category: "",
     status: "",
   });
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  const [error, setError] = useState<{
-    errorTitle: string;
-    errorDesc: string[];
-  } | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (type === "EDIT") {
@@ -51,21 +55,47 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
     }
   }, [data]);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    // Revoke URL saat lokasi berubah
+    if (previewImage) {
+      URL.revokeObjectURL(previewImage);
+      setPreviewImage(null); // Reset preview URL
+    }
+  }, [location.pathname]); // Dependency pada pathname
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === "image") {
       const images = e.target.files;
       if (images?.length) {
         const image = images[0];
+        if (image.size > 1024 * 1024) {
+          toast({
+            title: "Image Size Too Big",
+            description: "Please Select Image with size lower than 1MB",
+          });
+          return;
+        }
+
+        if (previewImage) {
+          URL.revokeObjectURL(previewImage);
+        }
+
+        const imageUrl = URL.createObjectURL(image);
+        setPreviewImage(imageUrl);
+
         const imageExtension = image.name.split(".").pop();
+
         return setNewsData({
           ...newsData,
           image: image,
           imageName: Date.now().toString() + "." + imageExtension,
         });
       } else {
-        return console.log("No File Selected");
+        toast({
+          title: "No Image",
+          description: "Please Select an Image",
+        });
+        return;
       }
     }
     const name = e.target.name;
@@ -98,11 +128,48 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
       });
       if (!validate.success) {
         const errorDesc = validate.error.issues.map((issue) => issue.message);
-        alert("Validasi Gagal");
         return setError({
           errorTitle: "Error Validation",
           errorDesc,
         });
+      }
+
+      const addNews = await createNews({
+        title: newsData?.title,
+        content: newsData?.content,
+        image: newsData?.imageName,
+        category: newsData?.category,
+        status: newsData?.status,
+      });
+
+      if (addNews.isAddSuccess) {
+        if (newsData.image && newsData.imageName) {
+          uploadImage(newsData.image, newsData.imageName);
+        }
+
+        toast({
+          title: "Success",
+          description: "News Added Successfully",
+        });
+
+        if (previewImage) {
+          URL.revokeObjectURL(previewImage);
+          setPreviewImage(null);
+        }
+
+        return navigate("/dashboard/news");
+      } else {
+        toast({
+          title: "Failed",
+          description: "Failed to Add Data, Please Try Again Later",
+        });
+
+        if (previewImage) {
+          URL.revokeObjectURL(previewImage);
+          setPreviewImage(null);
+        }
+
+        return navigate("/dashboard/news");
       }
     }
 
@@ -116,37 +183,12 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
       });
       if (!validate.success) {
         const errorDesc = validate.error.issues.map((issue) => issue.message);
-        alert("Validasi Gagal");
         return setError({
           errorTitle: "Error Validation",
           errorDesc,
         });
       }
-    }
 
-    if (type === "ADD") {
-      const addNews = await createNews({
-        title: newsData?.title,
-        content: newsData?.content,
-        image: newsData?.imageName,
-        category: newsData?.category,
-        status: newsData?.status,
-      });
-
-      if (addNews.isAddSuccess) {
-        if (newsData.image && newsData.imageName) {
-          console.log("Upload!!");
-          uploadImage(newsData.image, newsData.imageName);
-        }
-        alert("Data berhasil ditambahkan");
-        navigate("/dashboard/news");
-        return;
-      } else {
-        alert("Data gagal ditambahkan");
-      }
-    }
-
-    if (type === "EDIT") {
       let imageName;
       if (newsData.image && newsData.imageName) {
         imageName = newsData.imageName;
@@ -167,30 +209,39 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
 
       if (updatedNews.isUpdateSuccess) {
         if (newsData.image && newsData.imageName) {
-          console.log("Pakai gambar baru");
           uploadImage(newsData.image, newsData.imageName);
           deleteImage(newsData.oldImageName);
         }
-        alert("Data berhasil diupdate");
+
+        if (previewImage) {
+          URL.revokeObjectURL(previewImage);
+          setPreviewImage(null);
+        }
+
+        toast({
+          title: "Success",
+          description: "Data Updated Successfully",
+        });
         return navigate("/dashboard/news");
       } else {
-        alert("Data gagal diupdate");
+        toast({
+          title: "Failed",
+          description: "Failed to Update Data, Please Try Again Later",
+        });
+
+        if (previewImage) {
+          URL.revokeObjectURL(previewImage);
+          setPreviewImage(null);
+        }
+
+        return navigate("/dashboard/news");
       }
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {error && (
-        <div className="bg-red-700 rounded mt-2 p-2 text-white">
-          <p className="font-semibold">{error.errorTitle}</p>
-          <ol className="list-disc text-md ml-4">
-            {error.errorDesc.map((desc, index) => (
-              <li key={index}>{desc}</li>
-            ))}
-          </ol>
-        </div>
-      )}
+      <ErrorMessage error={error} />
       <div className="grid grid-cols-2">
         <div className="flex flex-col gap-3">
           <div>
@@ -224,72 +275,85 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
               />
             </div>
           </div>
-        </div>
-        <div className="bg-slate-500 w-1/2 mx-auto">
-          <img src={getImageUrl(newsData?.oldImageName)} alt="" />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2">
-        <div>
-          <label htmlFor="newsContent" className="font-semibold">
-            News Content
-          </label>
-          <div className="w-full mt-2">
-            <Tiptap newsData={newsData} setNewsData={setNewsData} />
+          <div className="flex flex-col">
+            <label htmlFor="category" className="font-semibold">
+              News Category
+            </label>
+            <select
+              value={newsData?.category}
+              onChange={handleSelectChange}
+              name="category"
+              id="category"
+              className="border-2 bg-transparent outline-none rounded-md p-2 font-semibold mt-1"
+            >
+              <option value={""}>Select Category</option>
+              {["politics", "sports", "health", "business", "travel"].map(
+                (category, index) => (
+                  <option value={category} key={index}>
+                    {category.charAt(0).toUpperCase() +
+                      category.slice(1).toLowerCase()}
+                  </option>
+                )
+              )}
+            </select>
           </div>
+          <div>
+            <label htmlFor="newsContent" className="font-semibold">
+              News Content
+            </label>
+            <div className="w-full mt-2">
+              <Tiptap newsData={newsData} setNewsData={setNewsData} />
+            </div>
+          </div>
+          <div className="my-4 flex gap-5">
+            <div className="flex gap-2">
+              <input
+                type="radio"
+                checked={newsData?.status === "published"}
+                onChange={handleChange}
+                name="status"
+                id="publish"
+                value="published"
+              />
+              <label htmlFor="publish">Publish</label>
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="radio"
+                checked={newsData?.status === "drafted"}
+                onChange={handleChange}
+                name="status"
+                id="draft"
+                value="drafted"
+              />
+              <label htmlFor="draft">Draft</label>
+            </div>
+          </div>
+          <Button className="text-md bg-violet-900 hover:bg-violet-950 w-fit">
+            {type === "ADD" ? "Add" : "Update"}
+          </Button>
         </div>
-      </div>
-
-      <div>
-        <label htmlFor="category" className="font-semibold">
-          News Category :
-        </label>
-        <select
-          value={newsData?.category}
-          onChange={handleSelectChange}
-          name="category"
-          id="category"
-          className="ml-2 border-2 bg-transparent outline-none rounded-md p-1 font-semibold"
-        >
-          <option value={""}>Select Category</option>
-          {["politics", "sports", "health", "business", "travel"].map(
-            (category, index) => (
-              <option value={category} key={index}>
-                {category.charAt(0).toUpperCase() +
-                  category.slice(1).toLowerCase()}
-              </option>
-            )
+        <div className="bg-violet-950 w-3/4 h-60 mx-auto">
+          {previewImage && (
+            <img src={previewImage} className="w-full h-full object-cover" />
           )}
-        </select>
-      </div>
 
-      <div className="mt-5 flex flex-col gap-2">
-        <div className="flex gap-2">
-          <input
-            type="radio"
-            checked={newsData?.status === "published"}
-            onChange={handleChange}
-            name="status"
-            id="publish"
-            value="published"
-          />
-          <label htmlFor="publish">Publish</label>
-        </div>
-        <div className="flex gap-2">
-          <input
-            type="radio"
-            checked={newsData?.status === "drafted"}
-            onChange={handleChange}
-            name="status"
-            id="draft"
-            value="drafted"
-          />
-          <label htmlFor="draft">Draft</label>
+          {newsData.oldImageName && !previewImage && (
+            <img
+              src={getImageUrl(newsData?.oldImageName)}
+              className="w-full h-full object-cover"
+            />
+          )}
+
+          {!previewImage && !newsData.oldImageName && (
+            <div className="flex justify-center items-center w-full h-full">
+              <div>
+                <p className="text-2xl text-white">No Image</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      <Button className="text-md bg-blue-500 mt-5 w-fit">Add</Button>
     </form>
   );
 }

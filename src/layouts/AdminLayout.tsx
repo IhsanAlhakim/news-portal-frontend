@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Toaster } from "@/components/ui/toaster";
 import { Users } from "@/models/users";
 import { getLoggedInUser, logout } from "@/network/NewsApi";
 import { LayoutDashboard, LogOut, Newspaper } from "lucide-react";
@@ -37,9 +38,7 @@ export default function AdminLayout() {
               <h1 className="text-xl font-bold">NEWSNOW ADMIN</h1>
             </div>
             <div className="ml-auto flex items-center gap-5">
-              <h2 className="font-semibold">
-                Selamat Datang, {Admin?.username}
-              </h2>
+              <h2 className="font-semibold">Welcome, {Admin?.username}</h2>
               <Avatar>
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
@@ -80,6 +79,7 @@ export default function AdminLayout() {
             <Outlet />
           </section>
         </main>
+        <Toaster />
       </div>
     </>
   );

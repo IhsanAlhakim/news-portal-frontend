@@ -31,7 +31,7 @@ export default function NewsCarousel({ newsForCarousel }: NewsCarouselProps) {
               <img
                 className="h-full w-full object-cover"
                 src={getImageUrl(news.image)}
-                alt=""
+                alt="News Image"
               />
             </div>
           </CarouselItem>

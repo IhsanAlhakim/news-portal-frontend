@@ -1,20 +1,19 @@
+import ErrorMessage from "@/components/ErrorMessage";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { loginFormSchema } from "@/lib/validation";
 import { login } from "@/network/NewsApi";
+import { type Error } from "@/types/error";
 import { ArrowRight, KeyRound, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [loginData, setLoginData] = useState<{
-    email?: string | undefined;
-    password?: string | undefined;
+    email?: string;
+    password?: string;
   } | null>(null);
-  const [error, setError] = useState<{
-    errorTitle: string;
-    errorDesc: string[];
-  } | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const navigate = useNavigate();
 
@@ -82,16 +81,7 @@ export default function Login() {
               Login with Email
             </p>
           </div>
-          {error && (
-            <div className="bg-red-700 rounded mt-2 p-2 text-white">
-              <p className="font-semibold">{error.errorTitle}</p>
-              <ol className="list-disc text-md ml-4">
-                {error.errorDesc.map((desc, index) => (
-                  <li key={index}>{desc}</li>
-                ))}
-              </ol>
-            </div>
-          )}
+          <ErrorMessage error={error} />
           <div className="mt-3">
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div>
@@ -130,7 +120,10 @@ export default function Login() {
                   />
                 </div>
               </div>
-              <Button className="text-md bg-blue-500 mt-5" type="submit">
+              <Button
+                className="text-md bg-blue-500 hover:bg-blue-700 mt-5"
+                type="submit"
+              >
                 Login
               </Button>
             </form>

@@ -33,7 +33,9 @@ const Tiptap = ({ newsData, setNewsData }: TiptapProps) => {
           "prose max-w-none [&_ol]:list-decimal [&_ul]:list-disc min-h-[300px] max-h-[300px] outline-none border-2 rounded-md p-2 font-normal text-black marker:text-black",
       },
     },
-    onUpdate({ editor }) {
+    // Ada bug kalau memakai onupdate
+    // spasi tidak terbaca
+    onBlur({ editor }) {
       setNewsData({ ...newsData, content: editor.getHTML() });
     },
   });
