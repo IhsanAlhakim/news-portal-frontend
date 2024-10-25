@@ -8,8 +8,8 @@ interface LatestNewsCardProps {
 export default function LatestNewsCard({ newsData }: LatestNewsCardProps) {
   return (
     <a href={`/news/${newsData?.category}/${newsData?._id}`}>
-      <div className="w-full h-[150px] flex">
-        <div className="bg-slate-600 h-full w-[120px]">
+      <div className="w-full h-[150px] grid grid-cols-[150px_calc(100%-150px)]">
+        <div className="bg-slate-600 h-full">
           <img
             className="w-full h-full object-cover"
             src={getImageUrl(newsData?.image)}

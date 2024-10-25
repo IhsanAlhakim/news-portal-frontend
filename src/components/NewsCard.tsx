@@ -8,8 +8,8 @@ interface NewsCardProps {
 
 export default function NewsCard({ news }: NewsCardProps) {
   return (
-    <div className="w-[200px] h-[230px] mx-auto">
-      <div className="bg-slate-500 w-full h-[130px]">
+    <div className="w-[200px] h-[230px] mx-auto grid grid-rows-[130px_calc(100%-130px)]">
+      <div className="bg-slate-500 w-full">
         <img
           src={getImageUrl(news.image)}
           className="w-full h-full object-cover"
@@ -17,7 +17,7 @@ export default function NewsCard({ news }: NewsCardProps) {
         />
       </div>
       <Link to={`/news/${news.category}/${news._id}`}>
-        <div className="h-[calc(100%-130px)] w-full flex flex-col gap-2 pt-3 pb-3">
+        <div className="w-full flex flex-col gap-2 pt-3 pb-3">
           <p className="text-xs text-zinc-500">{news.category}</p>
           <p className="text-xl font-semibold">{news.title}</p>
           <p className="text-xs text-zinc-500 mt-auto">{news.createdBy}</p>

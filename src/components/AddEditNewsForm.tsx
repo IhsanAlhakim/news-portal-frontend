@@ -1,14 +1,14 @@
+import { useToast } from "@/hooks/use-toast";
 import { deleteImage, getImageUrl, uploadImage } from "@/lib/supabase";
 import { addNewsFormSchema } from "@/lib/validation";
 import { News } from "@/models/news";
 import { createNews, updateNews } from "@/network/NewsApi";
+import { type Error } from "@/types/error";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import ErrorMessage from "./ErrorMessage";
 import Tiptap from "./TipTap";
 import { Button } from "./ui/button";
-import ErrorMessage from "./ErrorMessage";
-import { type Error } from "@/types/error";
-import { useToast } from "@/hooks/use-toast";
 
 export interface newsBody {
   title?: string | undefined;
@@ -39,7 +39,6 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
 
   const [error, setError] = useState<Error | null>(null);
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -56,12 +55,27 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
   }, [data]);
 
   useEffect(() => {
-    // Revoke URL saat lokasi berubah
-    if (previewImage) {
-      URL.revokeObjectURL(previewImage);
-      setPreviewImage(null); // Reset preview URL
+    let fileReader: FileReader | null;
+    let isCancel = false;
+    if (newsData.image) {
+      fileReader = new FileReader();
+      fileReader.onload = (e: ProgressEvent<FileReader>) => {
+        const result = e.target?.result as string | null;
+        if (result && !isCancel) {
+          setPreviewImage(result);
+        }
+      };
+      fileReader.readAsDataURL(newsData.image);
     }
-  }, [location.pathname]); // Dependency pada pathname
+    return () => {
+      //return di useEffect = Cleanup code to run when the component unmounts
+      isCancel = true;
+      if (fileReader && fileReader.readyState === 1) {
+        fileReader.abort();
+      }
+      fileReader = null;
+    };
+  }, [newsData.image]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === "image") {
@@ -76,12 +90,12 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
           return;
         }
 
-        if (previewImage) {
-          URL.revokeObjectURL(previewImage);
-        }
+        // if (previewImage) {
+        //   URL.revokeObjectURL(previewImage);
+        // }
 
-        const imageUrl = URL.createObjectURL(image);
-        setPreviewImage(imageUrl);
+        // const imageUrl = URL.createObjectURL(image);
+        // setPreviewImage(imageUrl);
 
         const imageExtension = image.name.split(".").pop();
 

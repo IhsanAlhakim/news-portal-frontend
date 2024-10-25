@@ -7,9 +7,9 @@ interface SideSectionProps {
 
 export default function SideSection({ latestNewsData }: SideSectionProps) {
   return (
-    <aside className="ml-auto w-full">
+    <aside className="ml-auto w-[300px]">
       <h2 className="mb-4 font-semibold">LATEST NEWS</h2>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 w-full">
         {latestNewsData.politicNews && (
           <LatestNewsCard newsData={latestNewsData.politicNews} />
         )}
