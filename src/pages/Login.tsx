@@ -14,6 +14,7 @@ export default function Login() {
     password?: string;
   } | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  const [serverError, setServerError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -26,38 +27,53 @@ export default function Login() {
     });
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const validate = loginFormSchema.safeParse({
-      email: loginData?.email,
-      password: loginData?.password,
-    });
-
-    if (!validate.success) {
-      const errorDesc = validate.error.issues.map((issue) => issue.message);
-
-      return setError({
-        errorTitle: "Error Validation",
-        errorDesc,
+    try {
+      e.preventDefault();
+      const validate = loginFormSchema.safeParse({
+        email: loginData?.email,
+        password: loginData?.password,
       });
+
+      if (!validate.success) {
+        const errorDesc = validate.error.issues.map((issue) => issue.message);
+
+        return setError({
+          errorTitle: "Error Validation",
+          errorDesc,
+        });
+      }
+
+      const isAuthenticatedUser = await login(
+        loginData?.email,
+        loginData?.password
+      );
+      if (isAuthenticatedUser) {
+        return navigate("/dashboard");
+      }
+      return setError({
+        errorTitle: "User Not Found",
+        errorDesc: ["Email or password incorrect"],
+      });
+    } catch (error) {
+      console.error(error);
+      console.log("Error Nih");
+      setServerError(true);
+      return;
     }
-
-    const isAuthenticatedUser = await login(
-      loginData?.email,
-      loginData?.password
-    );
-
-    if (isAuthenticatedUser) {
-      return navigate("/dashboard");
-    }
-
-    return setError({
-      errorTitle: "User Not Found",
-      errorDesc: ["Email or password incorrect"],
-    });
   };
 
   return (
     <main className="w-screen h-screen flex justify-center items-center bg-blue-500">
+      {serverError && (
+        <div
+          onClick={() => {
+            setServerError(false);
+          }}
+          className="fixed text-center w-full p-2 text-white bg-red-600 cursor-pointer hover:bg-red-400 top-0"
+        >
+          Server Error / Offline, Please Try Again Later
+        </div>
+      )}
       <section className="bg-white w-[800px] h-[500px] rounded-xl p-3 flex">
         <div className="w-1/2 bg-slate-50 rounded-lg flex p-5 bg-login-image bg-center bg-cover relative">
           <a

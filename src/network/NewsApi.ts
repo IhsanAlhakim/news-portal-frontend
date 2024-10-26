@@ -90,11 +90,15 @@ export async function login(email?: string, password?: string) {
       "Content-type": "application/json; charset=UTF-8",
     },
   });
+  if (response.status === 500) {
+    throw new Error("error");
+  }
   return response.ok;
 }
 
 export async function getLoggedInUser() {
   const response = await fetch(`${VITE_USER_API_PATH}`, { method: "GET" });
+  if (response.status === 500) throw new Error("error");
   return response.json();
 }
 

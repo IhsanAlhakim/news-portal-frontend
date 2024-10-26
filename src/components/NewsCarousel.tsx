@@ -1,4 +1,6 @@
+import { getImageUrl } from "@/lib/supabase";
 import { News } from "@/models/news";
+import { Link } from "react-router-dom";
 import {
   Carousel,
   CarouselContent,
@@ -6,8 +8,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "./ui/carousel";
-import { getImageUrl } from "@/lib/supabase";
-import { Link } from "react-router-dom";
 
 interface NewsCarouselProps {
   newsForCarousel: News[] | null;

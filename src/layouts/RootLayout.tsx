@@ -23,36 +23,54 @@ function RootLayout() {
     businessNews: null,
     travelNews: null,
   });
+  const [serverError, setServerError] = useState(false);
 
   useEffect(() => {
     async function loadLatestNews() {
-      const [
-        politicNewsData,
-        sportNewsData,
-        healthNewsData,
-        businessNewsData,
-        travelNewsData,
-      ] = await Promise.all([
-        getNewsByCategory("politics", 1),
-        getNewsByCategory("sports", 1),
-        getNewsByCategory("health", 1),
-        getNewsByCategory("business", 1),
-        getNewsByCategory("travel", 1),
-      ]);
-      setlatestNewsData({
-        politicNews: politicNewsData[0],
-        sportNews: sportNewsData[0],
-        healthNews: healthNewsData[0],
-        businessNews: businessNewsData[0],
-        travelNews: travelNewsData[0],
-      });
+      try {
+        const [
+          politicNewsData,
+          sportNewsData,
+          healthNewsData,
+          businessNewsData,
+          travelNewsData,
+        ] = await Promise.all([
+          getNewsByCategory("politics", 1),
+          getNewsByCategory("sports", 1),
+          getNewsByCategory("health", 1),
+          getNewsByCategory("business", 1),
+          getNewsByCategory("travel", 1),
+        ]);
+        setlatestNewsData({
+          politicNews: politicNewsData[0],
+          sportNews: sportNewsData[0],
+          healthNews: healthNewsData[0],
+          businessNews: businessNewsData[0],
+          travelNews: travelNewsData[0],
+        });
+      } catch (error) {
+        console.error(error);
+        setServerError(true);
+        return;
+      }
     }
+
     loadLatestNews();
   }, []);
 
   return (
     <>
       <div className="min-h-screen grid grid-rows-[156px_calc(100%-156px)]">
+        {serverError && (
+          <div
+            onClick={() => {
+              setServerError(false);
+            }}
+            className="fixed text-center w-full p-2 text-white bg-red-600 cursor-pointer hover:bg-red-400"
+          >
+            Server Error / Offline, Please Try Again Later
+          </div>
+        )}
         <Header />
         <main className="mt-14 mb-14">
           <div className="max-w-screen-lg mx-auto grid grid-cols-[calc(100%-300px)_300px]">

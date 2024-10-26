@@ -13,11 +13,16 @@ export default function AdminLayout() {
 
   useEffect(() => {
     const loadLoggedInUser = async () => {
-      const loggedInUser = await getLoggedInUser();
-      if (loggedInUser === null) {
-        return navigate("/dashboard/login");
+      try {
+        const loggedInUser = await getLoggedInUser();
+        if (loggedInUser === null) {
+          return navigate("/dashboard/login");
+        }
+        setAdmin(loggedInUser);
+      } catch (error) {
+        console.error(error);
+        navigate("/dashboard/login");
       }
-      setAdmin(loggedInUser);
     };
     loadLoggedInUser();
   }, []);
