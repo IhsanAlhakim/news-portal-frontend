@@ -59,7 +59,13 @@ export default function Login() {
   return (
     <main className="w-screen h-screen flex justify-center items-center bg-blue-500">
       <section className="bg-white w-[800px] h-[500px] rounded-xl p-3 flex">
-        <div className="w-1/2 bg-slate-50 rounded-lg flex p-5 bg-login-image bg-center bg-cover">
+        <div className="w-1/2 bg-slate-50 rounded-lg flex p-5 bg-login-image bg-center bg-cover relative">
+          <a
+            href="https://www.freepik.com/search?ai=excluded&color=blue&format=search&img=1&last_filter=img&last_value=1&query=Night+Landscape&selection=1&type=photo"
+            className="text-white absolute bottom-2 font-semibold"
+          >
+            Image by freepik
+          </a>
           <div>
             <h1 className="font-bold text-xl text-white">NEWSNOW</h1>
           </div>

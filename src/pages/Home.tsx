@@ -21,7 +21,6 @@ export default function Home() {
         getNewsForUser(),
         getNewsForUser(3),
       ]);
-      console.log(newsForCarousel);
       setNewsData({
         carouselNews: newsForCarousel,
         otherNews: newsForHome,
