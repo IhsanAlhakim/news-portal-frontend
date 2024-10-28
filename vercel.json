@@ -4,5 +4,6 @@
       "source": "/api/(.*)",
       "destination": "https://newsnow-ka1my9gb.b4a.run/$1"
     }
-  ]
+  ],
+  "routes": [{ "src": "/[^.]+", "dest": "/", "status": 200 }]
 }
