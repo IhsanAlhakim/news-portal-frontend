@@ -1,6 +1,6 @@
-const VITE_NEWS_API_PATH = import.meta.env.VITE_NEWS_API_PATH;
-const VITE_COMMENT_API_PATH = import.meta.env.VITE_COMMENT_API_PATH;
-const VITE_USER_API_PATH = import.meta.env.VITE_USER_API_PATH;
+const VITE_NEWS_API_PATH = "/api/news";
+const VITE_COMMENT_API_PATH = "/api/comments";
+const VITE_USER_API_PATH = "/api/users";
 
 export async function getNews(limit?: number) {
   let response;
