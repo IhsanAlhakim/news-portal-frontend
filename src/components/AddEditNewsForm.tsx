@@ -90,13 +90,6 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
           return;
         }
 
-        // if (previewImage) {
-        //   URL.revokeObjectURL(previewImage);
-        // }
-
-        // const imageUrl = URL.createObjectURL(image);
-        // setPreviewImage(imageUrl);
-
         const imageExtension = image.name.split(".").pop();
 
         return setNewsData({
@@ -166,22 +159,12 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
           description: "News Added Successfully",
         });
 
-        if (previewImage) {
-          URL.revokeObjectURL(previewImage);
-          setPreviewImage(null);
-        }
-
         return navigate("/dashboard/news");
       } else {
         toast({
           title: "Failed",
           description: "Failed to Add Data, Please Try Again Later",
         });
-
-        if (previewImage) {
-          URL.revokeObjectURL(previewImage);
-          setPreviewImage(null);
-        }
 
         return navigate("/dashboard/news");
       }
@@ -227,11 +210,6 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
           deleteImage(newsData.oldImageName);
         }
 
-        if (previewImage) {
-          URL.revokeObjectURL(previewImage);
-          setPreviewImage(null);
-        }
-
         toast({
           title: "Success",
           description: "Data Updated Successfully",
@@ -242,11 +220,6 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
           title: "Failed",
           description: "Failed to Update Data, Please Try Again Later",
         });
-
-        if (previewImage) {
-          URL.revokeObjectURL(previewImage);
-          setPreviewImage(null);
-        }
 
         return navigate("/dashboard/news");
       }

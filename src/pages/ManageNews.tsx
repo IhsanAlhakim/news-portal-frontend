@@ -2,6 +2,7 @@ import ManageNewsTable from "@/components/ManageNewsTable";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { deleteImage } from "@/lib/supabase";
 import { News } from "@/models/news";
 import { deleteNews, getNews } from "@/network/NewsApi";
 import { Plus } from "lucide-react";
@@ -17,6 +18,8 @@ export default function ManageNews() {
   const handleDelete = async (id: string) => {
     const isDeleted = await deleteNews(id);
     if (isDeleted) {
+      const selectedNewsData = newsData?.filter((news) => news._id === id)[0];
+      deleteImage(selectedNewsData?.image);
       setNewsData(newsData?.filter((news) => news._id !== id));
       toast({
         title: "Delete Success",
