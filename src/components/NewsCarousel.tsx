@@ -22,7 +22,7 @@ export default function NewsCarousel({ newsForCarousel }: NewsCarouselProps) {
             <div className="relative mx-auto mb-10 w-[600px] h-[400px] bg-slate-700">
               <Link to={`news/${news.category}/${news._id}`}>
                 <div className="absolute flex justify-center items-center bottom-0 w-full h-28 bg-gradient-to-t from-black to-transparent">
-                  <p className="text-white font-semibold text-2xl">
+                  <p className="text-white font-semibold text-2xl p-2">
                     {news.title}
                   </p>
                 </div>

@@ -18,7 +18,9 @@ export default function LatestNewsCard({ newsData }: LatestNewsCardProps) {
         </div>
         <div className="pl-2">
           <p className="text-xs text-zinc-500">{newsData?.category}</p>
-          <p className="text-xl font-semibold">{newsData?.title}</p>
+          <p className="text-xl font-semibold line-clamp-4">
+            {newsData?.title}
+          </p>
         </div>
       </div>
     </a>

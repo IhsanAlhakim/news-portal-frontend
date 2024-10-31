@@ -19,7 +19,7 @@ export default function NewsCard({ news }: NewsCardProps) {
       <Link to={`/news/${news.category}/${news._id}`}>
         <div className="w-full flex flex-col gap-2 pt-3 pb-3">
           <p className="text-xs text-zinc-500">{news.category}</p>
-          <p className="text-xl font-semibold">{news.title}</p>
+          <p className="text-xl font-semibold line-clamp-3">{news.title}</p>
           <p className="text-xs text-zinc-500 mt-auto">{news.createdBy}</p>
         </div>
       </Link>
