@@ -30,7 +30,7 @@ const Tiptap = ({ newsData, setNewsData }: TiptapProps) => {
     editorProps: {
       attributes: {
         class:
-          "prose max-w-none [&_ol]:list-decimal [&_ul]:list-disc min-h-[300px] max-h-[300px] outline-none border-2 rounded-md p-2 font-normal text-black marker:text-black",
+          "prose max-w-none [&_ol]:list-decimal [&_ul]:list-disc min-h-[300px] max-h-[300px] outline-none border-2 rounded-md p-2 font-normal text-black marker:text-black overflow-auto",
       },
     },
     // Ada bug kalau memakai onupdate

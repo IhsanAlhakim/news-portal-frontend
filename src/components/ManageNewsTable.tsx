@@ -29,7 +29,7 @@ export default function ManageNewsTable({
         <Table>
           <TableCaption>A list of your recent invoices.</TableCaption>
           <TableHeader>
-            <TableRow>
+            <TableRow className="grid grid-cols-[1fr_2fr_3fr_1fr_1fr_2fr]">
               <TableHead>Image</TableHead>
               <TableHead>Title</TableHead>
               <TableHead>Content</TableHead>
@@ -41,7 +41,10 @@ export default function ManageNewsTable({
           <TableBody>
             {newsList ? (
               newsList.map((news) => (
-                <TableRow key={news._id}>
+                <TableRow
+                  key={news._id}
+                  className="grid grid-cols-[1fr_2fr_3fr_1fr_1fr_2fr]"
+                >
                   <TableCell>
                     <img
                       src={getImageUrl(news.image)}
@@ -49,8 +52,12 @@ export default function ManageNewsTable({
                       width={60}
                     />
                   </TableCell>
-                  <TableCell>{news.title}</TableCell>
-                  <TableCell>{news.content.replace(/<[^>]*>/g, "")}</TableCell>
+                  <TableCell className="whitespace-nowrap overflow-hidden text-ellipsis">
+                    {news.title}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap overflow-hidden text-ellipsis">
+                    {news.content.replace(/<[^>]*>/g, "")}
+                  </TableCell>
                   <TableCell>{news.editedBy}</TableCell>
                   <TableCell>{news.status}</TableCell>
                   <TableCell className="flex gap-2">

@@ -19,7 +19,7 @@ export default function NewsTable({ newsList }: NewsTableProps) {
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
-        <TableRow>
+        <TableRow className="grid grid-cols-[3fr_1fr_1fr_2fr_2fr_1fr]">
           <TableHead>Title</TableHead>
           <TableHead>Author</TableHead>
           <TableHead>Editor</TableHead>
@@ -30,8 +30,13 @@ export default function NewsTable({ newsList }: NewsTableProps) {
       </TableHeader>
       <TableBody>
         {newsList.map((news) => (
-          <TableRow key={news._id}>
-            <TableCell>{news.title}</TableCell>
+          <TableRow
+            key={news._id}
+            className="grid grid-cols-[3fr_1fr_1fr_2fr_2fr_1fr]"
+          >
+            <TableCell className="whitespace-nowrap overflow-hidden text-ellipsis">
+              {news.title}
+            </TableCell>
             <TableCell>{news.createdBy}</TableCell>
             <TableCell>{news.editedBy}</TableCell>
             <TableCell>{getDate(news.createdAt)}</TableCell>
