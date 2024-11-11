@@ -22,7 +22,7 @@ export default function NewsEachCategory() {
         <h2 className="text-center">{category?.toUpperCase()} NEWS</h2>
       </div>
       <hr className="border-gray-300 my-8 mx-auto w-[700px]" />
-      <div className="grid grid-cols-3 gap-y-8">
+      <div className="grid grid-cols-3 gap-y-12">
         {newsData?.map((news) => (
           <NewsCard key={news._id} news={news} />
         ))}

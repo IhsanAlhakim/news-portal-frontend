@@ -8,7 +8,7 @@ interface NewsCardProps {
 
 export default function NewsCard({ news }: NewsCardProps) {
   return (
-    <div className="w-[200px] h-[230px] mx-auto grid grid-rows-[130px_calc(100%-130px)]">
+    <div className="w-[200px] min-h-[250px] max-h-[250px] mx-auto grid grid-rows-[130px_calc(100%-130px)]">
       <div className="bg-slate-500 w-full">
         <img
           src={getImageUrl(news.image)}

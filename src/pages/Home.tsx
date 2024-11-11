@@ -39,7 +39,7 @@ export default function Home() {
       <div className="mb-5">
         <h2 className="pl-4 text-2xl font-bold">OTHER NEWS</h2>
       </div>
-      <div className="grid grid-cols-3 gap-y-8">
+      <div className="grid grid-cols-3 gap-y-12">
         {newsData?.otherNews?.map((news) => (
           <NewsCard key={news._id} news={news} />
         ))}
