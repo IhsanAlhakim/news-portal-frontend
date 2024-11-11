@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://newsnow-ka1my9gb.b4a.run/$1"
+      "destination": "https://unemployed-karie-sane-0c86e440.koyeb.app/$1"
     },
     { "source": "/(.*)", "destination": "/" }
   ]
