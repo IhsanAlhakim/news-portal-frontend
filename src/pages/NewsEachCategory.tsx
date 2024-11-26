@@ -1,8 +1,10 @@
-import NewsCard from "@/components/NewsCard";
+import NewsCardSkeleton from "@/components/skeleton/NewsCardSkeleton";
 import { News } from "@/models/news";
 import { getNewsByCategory } from "@/network/NewsApi";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
+const NewsCardContainer = lazy(() => import("@/components/NewsCardContainer"));
 
 export default function NewsEachCategory() {
   const [newsData, setNewsData] = useState<News[] | null>(null);
@@ -23,9 +25,17 @@ export default function NewsEachCategory() {
       </div>
       <hr className="border-gray-300 my-8 mx-auto w-[700px]" />
       <div className="grid grid-cols-3 gap-y-12">
-        {newsData?.map((news) => (
-          <NewsCard key={news._id} news={news} />
-        ))}
+        <Suspense
+          fallback={
+            <>
+              <NewsCardSkeleton />
+              <NewsCardSkeleton />
+              <NewsCardSkeleton />
+            </>
+          }
+        >
+          <NewsCardContainer newsData={newsData} />
+        </Suspense>
       </div>
     </section>
   );
