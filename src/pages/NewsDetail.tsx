@@ -1,6 +1,7 @@
 import ErrorMessage from "@/components/ErrorMessage";
-import NewsComment from "@/components/NewsComment";
+import NewsCommentSkeleton from "@/components/skeleton/NewsCommentSkeleton";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import getDate from "@/lib/getDate";
 import { createMarkup } from "@/lib/sanitizeHtml";
@@ -16,8 +17,12 @@ import {
 } from "@/network/NewsApi";
 import { type Error } from "@/types/error";
 import { SendHorizonal } from "lucide-react";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
+const NewsCommentContainer = lazy(
+  () => import("@/components/NewsCommentContainer")
+);
 
 export default function NewsDetail() {
   const { newsId } = useParams();
@@ -82,31 +87,46 @@ export default function NewsDetail() {
 
   return (
     <section className="w-full p-10">
-      <div className="flex flex-col items-center gap-2 mb-4">
-        <h2 className="text-4xl font-bold text-center">{newsData?.title}</h2>
-        <p className="text-base font-semibold">
-          {newsData?.createdBy} - {newsData?.category}
-        </p>
-        {newsData?.createdAt && (
-          <p className="text-sm font-normal">{getDate(newsData?.createdAt)}</p>
-        )}
-      </div>
-      <div className="mb-10">
-        <div className="w-full h-[300px] bg-slate-600">
-          <img
-            src={getImageUrl(newsData?.image)}
-            alt=""
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </div>
-      {newsData?.content ? (
-        <div
-          dangerouslySetInnerHTML={createMarkup(newsData?.content)}
-          className="text-lg"
-        ></div>
+      {newsData ? (
+        <>
+          <div className="flex flex-col items-center gap-2 mb-4">
+            <h2 className="text-4xl font-bold text-center">
+              {newsData?.title}
+            </h2>
+            <p className="text-base font-semibold">
+              {newsData?.createdBy} - {newsData?.category}
+            </p>
+            <p className="text-sm font-normal">
+              {getDate(newsData?.createdAt)}
+            </p>
+          </div>
+          <div className="mb-10">
+            <div className="w-full h-[300px] bg-slate-600">
+              <img
+                src={getImageUrl(newsData?.image)}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+          <div
+            dangerouslySetInnerHTML={createMarkup(newsData?.content)}
+            className="text-lg"
+          ></div>
+        </>
       ) : (
-        ""
+        <>
+          <div className="flex flex-col items-center gap-2 mb-4">
+            <Skeleton className="w-[550px] h-[35px] bg-slate-500" />
+            <Skeleton className="w-[550px] h-[35px] bg-slate-500" />
+            <Skeleton className="w-[100px] h-[25px] bg-slate-500" />
+            <Skeleton className="w-[250px] h-[25px] bg-slate-500" />
+          </div>
+          <div className="mb-10">
+            <Skeleton className="w-full h-[300px] bg-slate-500" />
+          </div>
+          <Skeleton className="w-full h-[300px] bg-slate-500" />
+        </>
       )}
 
       <hr className="border-gray-300 my-4" />
@@ -138,9 +158,17 @@ export default function NewsDetail() {
           <span className="font-bold">Komentar </span> ({newsCommentCount})
         </h3>
         <div className="bg-white p-3 rounded-lg flex flex-col gap-3 divide-y">
-          {newsComment?.map((comment) => (
-            <NewsComment key={comment._id} comment={comment} />
-          ))}
+          <Suspense
+            fallback={
+              <>
+                <NewsCommentSkeleton />
+                <NewsCommentSkeleton />
+                <NewsCommentSkeleton />
+              </>
+            }
+          >
+            <NewsCommentContainer newsComment={newsComment} />
+          </Suspense>
         </div>
       </div>
     </section>
