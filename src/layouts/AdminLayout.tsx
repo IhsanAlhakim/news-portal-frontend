@@ -8,6 +8,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 
 export default function AdminLayout() {
   const [Admin, setAdmin] = useState<Users | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -28,9 +29,16 @@ export default function AdminLayout() {
   }, []);
 
   const handleLogout = async () => {
-    const isLoggedOut = await logout();
-    if (isLoggedOut) {
-      navigate("/dashboard/login");
+    try {
+      setLoading(true);
+      const isLoggedOut = await logout();
+      if (isLoggedOut) {
+        navigate("/dashboard/login");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,10 +80,14 @@ export default function AdminLayout() {
                 </li>
                 <li
                   onClick={handleLogout}
-                  className="cursor-pointer p-4 hover:bg-purple-950 hover:text-white transition-all mt-auto flex gap-4 items-center"
+                  className={`cursor-pointer p-4 ${
+                    loading
+                      ? "hover:bg-slate-500 bg-slate-500"
+                      : "hover:bg-purple-950"
+                  } hover:text-white transition-all mt-auto flex gap-4 items-center`}
                 >
                   <LogOut />
-                  <p>Logout</p>
+                  <p>Logout{loading && "..."}</p>
                 </li>
               </ul>
             </nav>

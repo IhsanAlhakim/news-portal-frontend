@@ -36,7 +36,7 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
     status: "",
   });
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -123,106 +123,113 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    try {
+      setLoading(true);
+      e.preventDefault();
 
-    if (type === "ADD") {
-      const validate = addNewsFormSchema.safeParse({
-        title: newsData.title,
-        content: newsData.content,
-        image: newsData.imageName,
-        category: newsData.category,
-        status: newsData.status,
-      });
-      if (!validate.success) {
-        const errorDesc = validate.error.issues.map((issue) => issue.message);
-        return setError({
-          errorTitle: "Error Validation",
-          errorDesc,
+      if (type === "ADD") {
+        const validate = addNewsFormSchema.safeParse({
+          title: newsData.title,
+          content: newsData.content,
+          image: newsData.imageName,
+          category: newsData.category,
+          status: newsData.status,
         });
-      }
-
-      const addNews = await createNews({
-        title: newsData?.title,
-        content: newsData?.content,
-        image: newsData?.imageName,
-        category: newsData?.category,
-        status: newsData?.status,
-      });
-
-      if (addNews.isAddSuccess) {
-        if (newsData.image && newsData.imageName) {
-          uploadImage(newsData.image, newsData.imageName);
+        if (!validate.success) {
+          const errorDesc = validate.error.issues.map((issue) => issue.message);
+          return setError({
+            errorTitle: "Error Validation",
+            errorDesc,
+          });
         }
 
-        toast({
-          title: "Success",
-          description: "News Added Successfully",
-        });
-
-        return navigate("/dashboard/news");
-      } else {
-        toast({
-          title: "Failed",
-          description: "Failed to Add Data, Please Try Again Later",
-        });
-
-        return navigate("/dashboard/news");
-      }
-    }
-
-    if (type === "EDIT") {
-      const EditNewsFormSchema = addNewsFormSchema.omit({ image: true });
-      const validate = EditNewsFormSchema.safeParse({
-        title: newsData.title,
-        content: newsData.content,
-        category: newsData.category,
-        status: newsData.status,
-      });
-      if (!validate.success) {
-        const errorDesc = validate.error.issues.map((issue) => issue.message);
-        return setError({
-          errorTitle: "Error Validation",
-          errorDesc,
-        });
-      }
-
-      let imageName;
-      if (newsData.image && newsData.imageName) {
-        imageName = newsData.imageName;
-      } else {
-        imageName = newsData.oldImageName;
-      }
-
-      const updatedNews = await updateNews(
-        {
+        const addNews = await createNews({
           title: newsData?.title,
           content: newsData?.content,
-          image: imageName,
+          image: newsData?.imageName,
           category: newsData?.category,
           status: newsData?.status,
-        },
-        data?._id
-      );
+        });
 
-      if (updatedNews.isUpdateSuccess) {
-        if (newsData.image && newsData.imageName) {
-          uploadImage(newsData.image, newsData.imageName);
-          deleteImage(newsData.oldImageName);
+        if (addNews.isAddSuccess) {
+          if (newsData.image && newsData.imageName) {
+            uploadImage(newsData.image, newsData.imageName);
+          }
+
+          toast({
+            title: "Success",
+            description: "News Added Successfully",
+          });
+
+          return navigate("/dashboard/news");
+        } else {
+          toast({
+            title: "Failed",
+            description: "Failed to Add Data, Please Try Again Later",
+          });
+
+          return navigate("/dashboard/news");
+        }
+      }
+
+      if (type === "EDIT") {
+        const EditNewsFormSchema = addNewsFormSchema.omit({ image: true });
+        const validate = EditNewsFormSchema.safeParse({
+          title: newsData.title,
+          content: newsData.content,
+          category: newsData.category,
+          status: newsData.status,
+        });
+        if (!validate.success) {
+          const errorDesc = validate.error.issues.map((issue) => issue.message);
+          return setError({
+            errorTitle: "Error Validation",
+            errorDesc,
+          });
         }
 
-        toast({
-          title: "Success",
-          description: "Data Updated Successfully",
-        });
-        return navigate("/dashboard/news");
-      } else {
-        toast({
-          title: "Failed",
-          description: "Failed to Update Data, Please Try Again Later",
-        });
+        let imageName;
+        if (newsData.image && newsData.imageName) {
+          imageName = newsData.imageName;
+        } else {
+          imageName = newsData.oldImageName;
+        }
 
-        return navigate("/dashboard/news");
+        const updatedNews = await updateNews(
+          {
+            title: newsData?.title,
+            content: newsData?.content,
+            image: imageName,
+            category: newsData?.category,
+            status: newsData?.status,
+          },
+          data?._id
+        );
+
+        if (updatedNews.isUpdateSuccess) {
+          if (newsData.image && newsData.imageName) {
+            uploadImage(newsData.image, newsData.imageName);
+            deleteImage(newsData.oldImageName);
+          }
+
+          toast({
+            title: "Success",
+            description: "Data Updated Successfully",
+          });
+          return navigate("/dashboard/news");
+        } else {
+          toast({
+            title: "Failed",
+            description: "Failed to Update Data, Please Try Again Later",
+          });
+
+          return navigate("/dashboard/news");
+        }
       }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -316,8 +323,12 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
               <label htmlFor="draft">Draft</label>
             </div>
           </div>
-          <Button className="text-md bg-violet-900 hover:bg-violet-950 w-fit">
+          <Button
+            disabled={loading}
+            className="text-md bg-violet-900 hover:bg-violet-950 w-fit"
+          >
             {type === "ADD" ? "Add" : "Update"}
+            {loading && "..."}
           </Button>
         </div>
         <div className="bg-violet-950 w-3/4 h-60 mx-auto">

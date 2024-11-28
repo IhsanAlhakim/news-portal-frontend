@@ -32,9 +32,11 @@ export default function NewsDetail() {
   const [newsComment, setNewsComment] = useState<Comments[] | null>(null);
   const [comment, setComment] = useState<string>("");
   const [newsCommentCount, setNewsCommentCount] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
 
   const sendComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     const validate = addCommentFormSchema.safeParse({
       comment: comment,
@@ -57,12 +59,14 @@ export default function NewsDetail() {
         title: "Comment sent",
         description: "Your comment has been sent ",
       });
+      setLoading(false);
       return;
     }
     toast({
       title: "Comment not sent",
       description: "Your comment failed to be sent",
     });
+    setLoading(false);
     return;
   };
 
@@ -145,8 +149,11 @@ export default function NewsDetail() {
               className="bg-transparent w-full resize-none outline-none"
             />
             <div className="ml-auto">
-              <Button className="bg-blue-700 hover:bg-blue-950">
-                Kirim
+              <Button
+                disabled={loading}
+                className="bg-blue-700 hover:bg-blue-950"
+              >
+                Kirim{loading && "..."}
                 <SendHorizonal className="ml-2" size={15} />
               </Button>
             </div>

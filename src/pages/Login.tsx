@@ -15,6 +15,7 @@ export default function Login() {
   } | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [serverError, setServerError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -29,6 +30,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
+      setLoading(true);
       const validate = loginFormSchema.safeParse({
         email: loginData?.email,
         password: loginData?.password,
@@ -36,7 +38,6 @@ export default function Login() {
 
       if (!validate.success) {
         const errorDesc = validate.error.issues.map((issue) => issue.message);
-
         return setError({
           errorTitle: "Error Validation",
           errorDesc,
@@ -56,9 +57,10 @@ export default function Login() {
       });
     } catch (error) {
       console.error(error);
-      console.log("Error Nih");
       setServerError(true);
       return;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -143,10 +145,11 @@ export default function Login() {
                 </div>
               </div>
               <Button
+                disabled={loading}
                 className="text-md bg-blue-500 hover:bg-blue-700 mt-5"
                 type="submit"
               >
-                Login
+                Login{loading && "..."}
               </Button>
             </form>
           </div>

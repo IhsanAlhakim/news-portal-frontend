@@ -1,5 +1,7 @@
-import DashboardCard from "@/components/DashboardCard";
-import NewsTable from "@/components/NewsTable";
+// import DashboardCard from "@/components/DashboardCard";
+// import NewsTable from "@/components/NewsTable";
+import DashboardCardSkeleton from "@/components/skeleton/DashboardCardSkeleton";
+import NewsTableSkeleton from "@/components/skeleton/NewsTableSkeleton";
 import { Separator } from "@/components/ui/separator";
 import { News } from "@/models/news";
 import { getCommentCount, getNews, getNewsCount } from "@/network/NewsApi";
@@ -9,7 +11,10 @@ import {
   MessageSquareText,
   Newspaper,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+
+const DashboardCard = lazy(() => import("@/components/DashboardCard"));
+const NewsTable = lazy(() => import("@/components/NewsTable"));
 
 interface DashboardData {
   totalNews: number;
@@ -58,36 +63,45 @@ export default function Dashboard() {
   return (
     <div className="grid grid-rows-[150px_calc(100%-150px)]">
       <div className="flex gap-10">
-        <DashboardCard
-          title="Total News"
-          count={dashboardData.totalNews}
-          Icon={Newspaper}
-        />
-        <DashboardCard
-          title="Total Published News"
-          count={dashboardData.totalPublishedNews}
-          Icon={BookCheck}
-        />
-        <DashboardCard
-          title="Total Drafted News"
-          count={dashboardData.totalDraftedNews}
-          Icon={BookDashed}
-        />
-        <DashboardCard
-          title="Total Comments"
-          count={dashboardData.totalComments}
-          Icon={MessageSquareText}
-        />
+        <Suspense
+          fallback={
+            <>
+              <DashboardCardSkeleton />
+              <DashboardCardSkeleton />
+              <DashboardCardSkeleton />
+              <DashboardCardSkeleton />
+            </>
+          }
+        >
+          <DashboardCard
+            title="Total News"
+            count={dashboardData.totalNews}
+            Icon={Newspaper}
+          />
+          <DashboardCard
+            title="Total Published News"
+            count={dashboardData.totalPublishedNews}
+            Icon={BookCheck}
+          />
+          <DashboardCard
+            title="Total Drafted News"
+            count={dashboardData.totalDraftedNews}
+            Icon={BookDashed}
+          />
+          <DashboardCard
+            title="Total Comments"
+            count={dashboardData.totalComments}
+            Icon={MessageSquareText}
+          />
+        </Suspense>
       </div>
       <div className="bg-white min-h-[300px] rounded-xl p-5">
         <h3 className="text-xl font-bold">Recent News</h3>
         <Separator className="my-3 border-1 bg-violet-950" />
         <div className="max-h-[200px] overflow-auto ">
-          {dashboardData.newsData.length > 0 ? (
+          <Suspense fallback={<NewsTableSkeleton />}>
             <NewsTable newsList={dashboardData.newsData} />
-          ) : (
-            <div className="text-center mt-3 text-xl">No News Data Yet</div>
-          )}
+          </Suspense>
         </div>
       </div>
     </div>
