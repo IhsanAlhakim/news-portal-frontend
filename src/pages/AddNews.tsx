@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function AddNews() {
   return (
-    <div className="add-news-container bg-white min-h-[450px] rounded-xl p-5">
+    <div className=" bg-white min-h-[450px] rounded-xl p-5">
       <div className="flex items-center">
         <h3 className="text-xl font-bold">Add News</h3>
       </div>

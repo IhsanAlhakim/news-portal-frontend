@@ -19,12 +19,12 @@ export default function NewsEachCategory() {
   }, []);
 
   return (
-    <section className="w-full">
+    <section>
       <div className="text-2xl font-bold">
         <h2 className="text-center">{category?.toUpperCase()} NEWS</h2>
       </div>
-      <hr className="border-gray-300 my-8 mx-auto w-[700px]" />
-      <div className="grid grid-cols-3 gap-y-12">
+      <hr className="w-[80%] md:w-[700px] border-gray-300 my-8 mx-auto " />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12">
         <Suspense
           fallback={
             <>

@@ -90,11 +90,11 @@ export default function NewsDetail() {
   }, []);
 
   return (
-    <section className="w-full p-10">
+    <section className="px-5 md:p-10">
       {newsData ? (
         <>
-          <div className="flex flex-col items-center gap-2 mb-4">
-            <h2 className="text-4xl font-bold text-center">
+          <div className="mb-4 flex flex-col items-center gap-2">
+            <h2 className="text-xl md:text-4xl font-bold text-center">
               {newsData?.title}
             </h2>
             <p className="text-base font-semibold">
@@ -120,9 +120,9 @@ export default function NewsDetail() {
         </>
       ) : (
         <>
-          <div className="flex flex-col items-center gap-2 mb-4">
-            <Skeleton className="w-[550px] h-[35px] bg-slate-500" />
-            <Skeleton className="w-[550px] h-[35px] bg-slate-500" />
+          <div className="mb-4 flex flex-col items-center gap-2">
+            <Skeleton className="w-full md:w-[550px] h-[35px] bg-slate-500" />
+            <Skeleton className="w-full md:w-[550px] h-[35px] bg-slate-500" />
             <Skeleton className="w-[100px] h-[25px] bg-slate-500" />
             <Skeleton className="w-[250px] h-[25px] bg-slate-500" />
           </div>
@@ -137,7 +137,7 @@ export default function NewsDetail() {
       <div className="bg-slate-100 p-3 rounded">
         <h3 className="mb-4 font-bold">Tulis Komentar</h3>
         <ErrorMessage error={error} />
-        <div className="bg-white p-3 rounded-lg flex flex-col gap-3 mt-3">
+        <div className="bg-white p-3 mt-3 rounded-lg flex flex-col gap-3">
           <form onSubmit={sendComment}>
             <textarea
               name="comment"
@@ -146,9 +146,9 @@ export default function NewsDetail() {
               onChange={handleChange}
               rows={4}
               placeholder="Write A Comment..."
-              className="bg-transparent w-full resize-none outline-none"
+              className="w-full bg-transparent resize-none outline-none"
             />
-            <div className="ml-auto">
+            <div>
               <Button
                 disabled={loading}
                 className="bg-blue-700 hover:bg-blue-950"
@@ -160,7 +160,7 @@ export default function NewsDetail() {
           </form>
         </div>
       </div>
-      <div className="bg-slate-100 p-3 rounded mt-3">
+      <div className="bg-slate-100 p-3 mt-3 rounded">
         <h3 className="mb-4">
           <span className="font-bold">Komentar </span> ({newsCommentCount})
         </h3>

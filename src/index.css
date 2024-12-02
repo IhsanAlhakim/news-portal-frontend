@@ -13,3 +13,10 @@
     --radius: 0.5rem;
   }
 }
+
+@layer components {
+  .active-nav-dash {
+    background-color: #3b0764;
+    color: #fff;
+  }
+}

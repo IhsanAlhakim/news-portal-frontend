@@ -33,18 +33,18 @@ export default function Home() {
   }, []);
 
   return (
-    <section className="w-full ">
+    <section>
       <div className="mb-5">
         <h2 className="text-center text-2xl font-bold">TODAYS NEWS</h2>
       </div>
       <Suspense fallback={<CarouselSkeleton />}>
         <NewsCarousel newsForCarousel={newsData.carouselNews} />
       </Suspense>
-      <hr className="border-gray-300 my-4 w-[90%] mx-auto" />
+      <hr className="w-[90%] border-gray-300 my-4 mx-auto" />
       <div className="mb-5">
         <h2 className="pl-4 text-2xl font-bold">OTHER NEWS</h2>
       </div>
-      <div className="grid grid-cols-3 gap-y-12">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12">
         <Suspense
           fallback={
             <>

@@ -56,7 +56,7 @@ export default function ManageNews() {
 
   return (
     <>
-      <div className="bg-white min-h-[450px] rounded-xl p-5">
+      <div className="bg-white w-[350px] md:w-[650px] lg:w-full min-h-[450px] rounded-xl p-5 mx-auto mt-5">
         <div className="flex items-center">
           <h3 className="text-xl font-bold">Manage News</h3>
           <Button
@@ -83,7 +83,7 @@ export default function ManageNews() {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
           <div className="bg-white p-8 rounded shadow-lg">
             <h2 className="text-xl font-bold mb-4">Delete Confirmation</h2>
-            <p>Are you sure want to delete this news?</p>
+            <p>Are you sure want to delete this news data?</p>
             <div className="mt-4 flex justify-center gap-4">
               <Button
                 className="bg-violet-950 w-24"

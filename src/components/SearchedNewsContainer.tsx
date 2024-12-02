@@ -11,7 +11,7 @@ export default function SearchedNewsContainer({
   return (
     <>
       {newsData && newsData.length > 0 ? (
-        <div className="grid grid-cols-3 gap-y-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12">
           {newsData.map((news) => (
             <NewsCard key={news._id} news={news} />
           ))}

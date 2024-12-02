@@ -236,38 +236,57 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <ErrorMessage error={error} />
-      <div className="grid grid-cols-2">
+      <div className="lg:grid lg:grid-cols-2">
         <div className="flex flex-col gap-3">
           <div>
-            <label htmlFor="" className="font-semibold">
+            <label htmlFor="title" className="font-semibold">
               News Title
             </label>
-            <div className="w-full bg-transparent outline-none rounded-md border-2 p-2 flex gap-2 items-center mt-1">
+            <div className="w-full bg-transparent p-2 mt-1 flex outline-none rounded-md border-2 gap-2 items-center">
               <input
                 type="text"
                 name="title"
                 id="title"
                 value={newsData?.title}
                 onChange={handleChange}
-                placeholder="Masukkan Judul..."
+                placeholder="Insert News Title..."
                 className="w-full bg-transparent outline-none font-semibold"
               />
             </div>
           </div>
           <div>
-            <label htmlFor="" className="font-semibold">
+            <label htmlFor="image" className="font-semibold">
               News Image
             </label>
-            <div className="w-full bg-transparent outline-none rounded-md border-2 p-2 flex gap-2 items-center mt-1">
+            <div className="w-full bg-transparent p-2 mt-1 flex outline-none rounded-md border-2 gap-2 items-center">
               <input
                 type="file"
                 name="image"
                 id="image"
                 onChange={handleChange}
-                placeholder="Masukkan Gambar..."
                 className="w-full bg-transparent outline-none font-semibold"
               />
             </div>
+          </div>
+          <div className="bg-violet-950 w-full md:w-3/4 h-60 mx-auto lg:hidden">
+            {previewImage && (
+              <img src={previewImage} className="w-full h-full object-cover" />
+            )}
+
+            {newsData.oldImageName && !previewImage && (
+              <img
+                src={getImageUrl(newsData?.oldImageName)}
+                className="w-full h-full object-cover"
+              />
+            )}
+
+            {!previewImage && !newsData.oldImageName && (
+              <div className="flex justify-center items-center w-full h-full">
+                <div>
+                  <p className="text-2xl text-white">No Image</p>
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex flex-col">
             <label htmlFor="category" className="font-semibold">
@@ -278,7 +297,7 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
               onChange={handleSelectChange}
               name="category"
               id="category"
-              className="border-2 bg-transparent outline-none rounded-md p-2 font-semibold mt-1"
+              className="border-2 bg-transparent p-2 mt-1 outline-none rounded-md font-semibold"
             >
               <option value={""}>Select Category</option>
               {["politics", "sports", "health", "business", "travel"].map(
@@ -325,13 +344,13 @@ export default function AddEditNewsForm({ type, data }: AddEditNewsFormProps) {
           </div>
           <Button
             disabled={loading}
-            className="text-md bg-violet-900 hover:bg-violet-950 w-fit"
+            className="w-full lg:w-fit py-7 lg:py-0 text-md bg-violet-900 hover:bg-violet-950"
           >
             {type === "ADD" ? "Add" : "Update"}
             {loading && "..."}
           </Button>
         </div>
-        <div className="bg-violet-950 w-3/4 h-60 mx-auto">
+        <div className="hidden lg:block bg-violet-950 w-3/4 h-60 mx-auto">
           {previewImage && (
             <img src={previewImage} className="w-full h-full object-cover" />
           )}

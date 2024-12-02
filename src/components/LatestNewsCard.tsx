@@ -8,7 +8,7 @@ interface LatestNewsCardProps {
 export default function LatestNewsCard({ newsData }: LatestNewsCardProps) {
   return (
     <a href={`/news/${newsData?.category}/${newsData?._id}`}>
-      <div className="w-full h-[150px] grid grid-cols-[150px_calc(100%-150px)]">
+      <div className="h-[150px] grid grid-cols-[45%_55%]">
         <div className="bg-slate-600 h-full">
           <img
             className="w-full h-full object-cover"

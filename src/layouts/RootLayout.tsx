@@ -60,20 +60,20 @@ function RootLayout() {
 
   return (
     <>
-      <div className="min-h-screen grid grid-rows-[156px_calc(100%-156px)]">
+      <div className="min-h-screen">
         {serverError && (
           <div
             onClick={() => {
               setServerError(false);
             }}
-            className="fixed text-center w-full p-2 text-white bg-red-600 cursor-pointer hover:bg-red-400"
+            className="w-full fixed p-2 cursor-pointer text-white text-center bg-red-600 hover:bg-red-400  "
           >
             Server Error / Offline, Please Try Again Later
           </div>
         )}
         <Header />
         <main className="mt-14 mb-14">
-          <div className="max-w-screen-lg mx-auto grid grid-cols-[calc(100%-300px)_300px]">
+          <div className="max-w-screen-lg mx-auto lg:grid grid-cols-[calc(100%-300px)_300px]">
             <Outlet />
             <SideSection latestNewsData={latestNewsData} />
           </div>

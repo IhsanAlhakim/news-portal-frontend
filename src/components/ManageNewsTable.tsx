@@ -29,7 +29,7 @@ export default function ManageNewsTable({
         <Table>
           <TableCaption>A list of your recent invoices.</TableCaption>
           <TableHeader>
-            <TableRow className="grid grid-cols-[1fr_2fr_3fr_1fr_1fr_2fr]">
+            <TableRow className="grid grid-cols-[100px_200px_300px_100px_100px_200px] lg:grid-cols-[1fr_2fr_3fr_1fr_1fr_2fr]">
               <TableHead>Image</TableHead>
               <TableHead>Title</TableHead>
               <TableHead>Content</TableHead>
@@ -62,7 +62,7 @@ export default function ManageNewsTable({
                 <TableCell className="flex gap-2">
                   <Button
                     asChild
-                    className="bg-violet-900 hover:bg-violet-950 w-20"
+                    className="w-20 bg-violet-900 hover:bg-violet-950"
                   >
                     <Link to={`/dashboard/news/edit/${news._id}`}>Edit</Link>
                   </Button>
